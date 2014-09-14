@@ -9,12 +9,13 @@
 
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 
+%global basepkg     php54w
 %global with_zts    0%{?__ztsphp:1}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   memcached
 
 Summary:      Extension to work with the Memcached caching daemon
-Name:         php-pecl-memcached
+Name:         %{basepkg}-pecl-memcached
 Version:      2.2.0
 Release:      1%{?dist}
 # memcached is PHP, FastLZ is MIT
@@ -24,11 +25,9 @@ URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# 5.2.10 required to HAVE_JSON enabled
-BuildRequires: php-devel >= 5.2.10
-BuildRequires: php-pear
-BuildRequires: php-json
-BuildRequires: php-pecl-igbinary-devel
+BuildRequires: %{basepkg}-devel >= 5.2.10
+BuildRequires: %{basepkg}-pear
+BuildRequires: %{basepkg}-pecl-igbinary-devel
 %ifnarch ppc64
 BuildRequires: php-pecl-msgpack-devel
 %endif
@@ -43,7 +42,6 @@ BuildRequires: memcached
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Requires:     php-json%{?_isa}
 Requires:     php-pecl-igbinary%{?_isa}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
@@ -55,6 +53,8 @@ Provides:     php-%{pecl_name} = %{version}
 Provides:     php-%{pecl_name}%{?_isa} = %{version}
 Provides:     php-pecl(%{pecl_name}) = %{version}
 Provides:     php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:     php-pecl-%{pecl_name} = %{version}
+Provides:     php-pecl-%{pecl_name}%{?_isa} = %{version}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
@@ -246,106 +246,5 @@ exit $ret
 
 
 %changelog
-* Wed Apr  2 2014  Remi Collet <remi@fedoraproject.org> - 2.2.0-1
-- update to 2.2.0 (stable)
-- add all ini options in configuration file (comments)
-- install doc in pecl doc_dir
-- install tests in pecl test_dir
-- add dependency on pecl/msgpack (except on ppc64)
-- add --with tests option to run upstream test suite during build
-
-* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0-8
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
-
-* Fri Mar 22 2013 Remi Collet <rcollet@redhat.com> - 2.1.0-7
-- rebuild for http://fedoraproject.org/wiki/Features/Php55
-
-* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.1.0-6
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
-
-* Mon Nov 19 2012  Remi Collet <remi@fedoraproject.org> - 2.1.0-5
-- requires libmemcached >= build version
-
-* Sat Nov 17 2012  Remi Collet <remi@fedoraproject.org> - 2.1.0-4
-- rebuild for libmemcached 1.0.14 (with SASL)
-- switch to upstream patch
-- add patch to report about SASL support in phpinfo
-
-* Fri Oct 19 2012 Remi Collet <remi@fedoraproject.org> - 2.1.0-3
-- improve comment in configuration about session.
-
-* Sat Sep 22 2012 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
-- rebuild for new libmemcached
-- drop sasl support
-
-* Tue Aug 07 2012 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
-- update to 2.1.0
-- add patch to lower libmemcached required version
-
-* Tue Jul 31 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-4
-- bump release
-
-* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.1-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
-
-* Mon Apr 23 2012  Remi Collet <remi@fedoraproject.org> - 2.0.1-3
-- enable ZTS extension
-
-* Sat Mar 03 2012  Remi Collet <remi@fedoraproject.org> - 2.0.1-1
-- update to 2.0.1
-
-* Sat Mar 03 2012  Remi Collet <remi@fedoraproject.org> - 2.0.0-1
-- update to 2.0.0
-
-* Thu Jan 19 2012 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.1736623
-- update to git snapshot (post 2.0.0b2) for php 5.4 build
-
-* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-8
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
-
-* Sat Sep 17 2011  Remi Collet <remi@fedoraproject.org> - 1.0.2-7
-- rebuild against libmemcached 0.52
-- adapted filter
-- clean spec
-
-* Thu Jun 02 2011  Remi Collet <Fedora@FamilleCollet.com> - 1.0.2-6
-- rebuild against libmemcached 0.49
-
-* Thu Mar 17 2011  Remi Collet <Fedora@FamilleCollet.com> - 1.0.2-5
-- rebuilt with igbinary support
-- add arch specific provides/requires
-
-* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.2-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Sat Oct 23 2010  Remi Collet <Fedora@FamilleCollet.com> - 1.0.2-3
-- add filter_provides to avoid private-shared-object-provides memcached.so
-
-* Fri Oct 01 2010 Remi Collet <fedora@famillecollet.com> - 1.0.2-2
-- rebuild against libmemcached 0.44 with SASL support
-
-* Tue May 04 2010 Remi Collet <fedora@famillecollet.com> - 1.0.2-1
-- update to 1.0.2 for libmemcached 0.40
-
-* Sat Mar 13 2010 Remi Collet <fedora@famillecollet.com> - 1.0.1-1
-- update to 1.0.1 for libmemcached 0.38
-
-* Sun Feb 07 2010 Remi Collet <fedora@famillecollet.com> - 1.0.0-3.1
-- bump release
-
-* Sat Feb 06 2010 Remi Collet <fedora@famillecollet.com> - 1.0.0-3
-- rebuilt against new libmemcached
-- add minimal %%check
-
-* Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.0-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
-
-* Sun Jul 12 2009 Remi Collet <fedora@famillecollet.com> - 1.0.0-1
-- Update to 1.0.0 (First stable release)
-
-* Sat Jun 27 2009 Remi Collet <fedora@famillecollet.com> - 0.2.0-1
-- Update to 0.2.0 + Patch for HAVE_JSON constant
-
-* Sun Apr 29 2009 Remi Collet <fedora@famillecollet.com> - 0.1.5-1
-- Initial RPM
-
+* Sun Sep 14 2014 Andy Thompson <andy@webtatic.com> - 2.2.0-1
+- Import EPEL php-pecl-memcached-2.2.0-1.el7 RPM
