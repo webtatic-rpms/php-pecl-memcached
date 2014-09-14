@@ -28,9 +28,6 @@ Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRequires: %{basepkg}-devel >= 5.2.10
 BuildRequires: %{basepkg}-pear
 BuildRequires: %{basepkg}-pecl-igbinary-devel
-%ifnarch ppc64
-BuildRequires: php-pecl-msgpack-devel
-%endif
 BuildRequires: libevent-devel  > 2
 BuildRequires: libmemcached-devel > 1
 BuildRequires: zlib-devel
@@ -45,9 +42,6 @@ Requires(postun): %{__pecl}
 Requires:     php-pecl-igbinary%{?_isa}
 Requires:     php(zend-abi) = %{php_zend_api}
 Requires:     php(api) = %{php_core_api}
-%ifnarch ppc64
-Requires:     php-pecl-msgpack%{?_isa}
-%endif
 
 Provides:     php-%{pecl_name} = %{version}
 Provides:     php-%{pecl_name}%{?_isa} = %{version}
@@ -120,9 +114,6 @@ peclconf() {
 %configure --enable-memcached-igbinary \
            --enable-memcached-json \
            --enable-memcached-sasl \
-%ifnarch ppc64
-           --enable-memcached-msgpack \
-%endif
            --enable-memcached-protocol \
            --with-php-config=$1
 }
@@ -248,3 +239,4 @@ exit $ret
 %changelog
 * Sun Sep 14 2014 Andy Thompson <andy@webtatic.com> - 2.2.0-1
 - Import EPEL php-pecl-memcached-2.2.0-1.el7 RPM
+- Remove msgpack dependency
