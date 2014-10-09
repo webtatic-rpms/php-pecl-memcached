@@ -17,7 +17,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{basepkg}-pecl-memcached
 Version:      2.2.0
-Release:      1%{?dist}
+Release:      2%{?dist}
 # memcached is PHP, FastLZ is MIT
 License:      PHP and MIT
 Group:        Development/Languages
@@ -25,11 +25,16 @@ URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{basepkg}-devel >= 5.2.10
 BuildRequires: %{basepkg}-pear
 BuildRequires: %{basepkg}-pecl-igbinary-devel
-BuildRequires: libevent-devel  > 2
+BuildRequires: libevent-devel
+%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 BuildRequires: libmemcached-devel > 1
+%else
+BuildRequires: libmemcached10-devel > 1
+%endif
 BuildRequires: zlib-devel
 BuildRequires: cyrus-sasl-devel
 %if %{with_tests}
@@ -114,7 +119,9 @@ peclconf() {
 %configure --enable-memcached-igbinary \
            --enable-memcached-json \
            --enable-memcached-sasl \
+%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
            --enable-memcached-protocol \
+%endif
            --with-php-config=$1
 }
 cd NTS
@@ -237,6 +244,9 @@ exit $ret
 
 
 %changelog
+* Thu Oct 09 2014 Andy Thompson <andy@webtatic.com> - 2.2.0-2
+- Add support for libmemcached10 on < EL7
+
 * Sun Sep 14 2014 Andy Thompson <andy@webtatic.com> - 2.2.0-1
 - Import EPEL php-pecl-memcached-2.2.0-1.el7 RPM
 - Remove msgpack dependency
