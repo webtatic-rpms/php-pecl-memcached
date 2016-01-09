@@ -9,7 +9,7 @@
 
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 
-%global basepkg     php54w
+%global basepkg     %{?basepkg}%{!?basepkg:php}
 %global with_zts    0%{?__ztsphp:1}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   memcached

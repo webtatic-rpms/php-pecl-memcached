@@ -1,0 +1,21 @@
+name: php-pecl-memcached
+profiles:
+  php54w:
+    define:
+      basepkg: php54w
+builds:
+  webtatic-el7:
+    target: el7-development
+    arch: [x86_64]
+    profiles:
+      - php54w
+  webtatic-el6:
+    target: el6-development
+    arch: [x86_64, i386]
+    profiles:
+      - php54w
+  webtatic-el5:
+    target: el5-development
+    arch: [x86_64, i386]
+    profiles:
+      - php54w
